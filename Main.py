@@ -6,7 +6,9 @@ import getpass
 try:
     from cryptography.fernet import Fernet
 except ImportError:
-    sys.exit("cryptography not installed install it with pip install cryptography via cmd or powershell (On Windows)")
+    print("cryptography not installed install it with pip install cryptography via cmd or powershell (On Windows)")
+    input("Press ENTER to exit")
+    sys.exit()
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
@@ -42,7 +44,9 @@ import sys
 try:
     from cryptography.fernet import Fernet
 except ImportError:
-    sys.exit("Error cryptography not installed install it with pip install cryptography via cmd or powershell (On Windows)")
+    print("cryptography not installed install it with pip install cryptography via cmd or powershell (On Windows)")
+    input("Press ENTER to exit")
+    sys.exit()
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
