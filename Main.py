@@ -17,7 +17,7 @@ except ImportError:
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
-print("PyLock beta v1.0.0 by ***REMOVED*** https://github.com/NDevTK/Python-Script-Locker")
+print("PyLock beta v1.0.1 by ***REMOVED*** https://github.com/NDevTK/Python-Script-Locker")
 pwd = getpass.getpass("Password to use: ")
 salt = os.urandom(16).encode('hex')
 kdf = PBKDF2HMAC(
