@@ -1,21 +1,25 @@
 #!/usr/bin/env python
-import base64
 import sys
+def exitmsg(msg):
+    print(msg)
+    input("Press ENTER to exit")
+    sys.exit()
+if sys.version_info<(3,0,0):
+    def input(string):
+         return raw_input(string)
+import base64
 import os
 import getpass
 try:
     from cryptography.fernet import Fernet
 except ImportError:
-    print("cryptography not installed install it with pip install cryptography via cmd or powershell (On Windows)")
-    input("Press ENTER to exit")
-    sys.exit()
+    exitmsg("cryptography not installed install it with pip install cryptography via cmd or powershell (On Windows)")
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
-encoding = "UTF-8"
-print("PyLock beta v1.0.0 by ***REMOVED*** https://***REMOVED***/PyLock")
+print("PyLock beta v1.0.0 by ***REMOVED*** https://github.com/NDevTK/Python-Script-Locker")
 pwd = getpass.getpass("Password to use: ")
-salt = os.urandom(16)
+salt = os.urandom(16).encode('hex')
 kdf = PBKDF2HMAC(
     algorithm=hashes.SHA256(),
     length=32,
@@ -23,60 +27,56 @@ kdf = PBKDF2HMAC(
     iterations=100000,
     backend=default_backend()
 )
-bytes_pwd = bytes(pwd, encoding)
-del pwd
-key = base64.urlsafe_b64encode(kdf.derive(bytes_pwd))
-del bytes_pwd
+key = base64.urlsafe_b64encode(kdf.derive(pwd))
 Auth = Fernet(key)
-del key
 loc = input("Script to use: ")
-print("Can be used to overwrite your script")
-sloc = input("Save as: ")
-fscript = open(loc)
+try:
+    fscript = open(loc)
+except IOError:
+    exitmsg("Unable to read file")
 script = fscript.read()
 fscript.close
-del fscript
+print("Can be used to overwrite your script")
+sloc = input("Save as: ")
 nc = '''#!/usr/bin/env python
-#Made using PyLock by ***REMOVED*** https://***REMOVED***/PyLock
+#Made using PyLock by ***REMOVED*** https://github.com/NDevTK/Python-Script-Locker
+import sys
+def exitmsg(msg):
+    print(msg)
+    input("Press ENTER to exit")
+    sys.exit()
+if sys.version_info<(3,0,0):
+    def input(string):
+         return raw_input(string)
 import getpass
 import base64
-import sys
 try:
     from cryptography.fernet import Fernet
 except ImportError:
-    print("cryptography not installed install it with pip install cryptography via cmd or powershell (On Windows)")
-    input("Press ENTER to exit")
-    sys.exit()
+    exitmsg("cryptography not installed install it with pip install cryptography via cmd or powershell (On Windows)")
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
-pwd = bytes(getpass.getpass("Password: "), "%s")
+pwd = getpass.getpass("Password: ")
 kdf = PBKDF2HMAC(
     algorithm=hashes.SHA256(),
     length=32,
-    salt=%s,
+    salt="%s",
     iterations=100000,
     backend=default_backend()
 )
 key = base64.urlsafe_b64encode(kdf.derive(pwd))
-del pwd
 Auth = Fernet(key)
-del key
 try:
-    exec(Auth.decrypt(b"%s").decode("%s"))
+    exec(Auth.decrypt("%s"))
 except Exception as ex:
     if(type(ex).__name__ == "InvalidToken"):
-        sys.exit("Wrong password (-:")
-    print(ex)
-del kdf
-del sys
-del Auth''' % (encoding, salt, Auth.encrypt(bytes(script, encoding)).decode(encoding), encoding)
-del encoding
-del script
-del Auth
-del salt
-f = open(sloc,"w+")
-f.write(nc)
+        exitmsg("Wrong password (-:")
+    print(ex)''' % (salt, Auth.encrypt(script))
+try:
+    f = open(sloc,"w+")
+    f.write(nc)
+except IOError:
+    exitmsg("Unable to write to file")
 f.close
-del f
-del nc
+exitmsg("Your file has been created")
