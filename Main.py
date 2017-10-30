@@ -26,7 +26,6 @@ kdf = PBKDF2HMAC(
     iterations=100000,
     backend=default_backend()
 )
-Auth = Fernet(base64.urlsafe_b64encode(kdf.derive(getpass.getpass("Password to use: "))))
 loc = input("Script to use: ")
 try:
     fscript = open(loc)
@@ -62,13 +61,12 @@ kdf = PBKDF2HMAC(
     iterations=100000,
     backend=default_backend()
 )
-Auth = Fernet(base64.urlsafe_b64encode(kdf.derive(getpass.getpass("Password: "))))
 try:
-    exec(Auth.decrypt("%s"))
+    exec(Fernet(base64.urlsafe_b64encode(kdf.derive(getpass.getpass("Password: ")))).decrypt("%s"))
 except Exception as ex:
     if(type(ex).__name__ == "InvalidToken"):
         exitmsg("Wrong password (-:")
-    print(ex)''' % (salt, Auth.encrypt(script))
+    print(ex)''' % (salt, Fernet(base64.urlsafe_b64encode(kdf.derive(getpass.getpass("Password to use: ")))).encrypt(script))
 try:
     f = open(sloc,"w+")
     f.write(nc)
