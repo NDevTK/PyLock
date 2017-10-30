@@ -2,7 +2,7 @@
 import sys
 def exitmsg(msg):
     print(msg)
-    input("Press ENTER to exit")
+    input("Press ENTER to exit the script")
     sys.exit()
 if sys.version_info<(3,0,0):
     def input(string):
@@ -18,7 +18,6 @@ from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 print("PyLock beta v1.0.1 by ***REMOVED*** https://github.com/NDevTK/Python-Script-Locker")
-pwd = getpass.getpass("Password to use: ")
 salt = os.urandom(16).encode('hex')
 kdf = PBKDF2HMAC(
     algorithm=hashes.SHA256(),
@@ -27,8 +26,7 @@ kdf = PBKDF2HMAC(
     iterations=100000,
     backend=default_backend()
 )
-key = base64.urlsafe_b64encode(kdf.derive(pwd))
-Auth = Fernet(key)
+Auth = Fernet(base64.urlsafe_b64encode(kdf.derive(getpass.getpass("Password to use: "))))
 loc = input("Script to use: ")
 try:
     fscript = open(loc)
@@ -57,7 +55,6 @@ except ImportError:
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
-pwd = getpass.getpass("Password: ")
 kdf = PBKDF2HMAC(
     algorithm=hashes.SHA256(),
     length=32,
@@ -65,8 +62,7 @@ kdf = PBKDF2HMAC(
     iterations=100000,
     backend=default_backend()
 )
-key = base64.urlsafe_b64encode(kdf.derive(pwd))
-Auth = Fernet(key)
+Auth = Fernet(base64.urlsafe_b64encode(kdf.derive(getpass.getpass("Password: "))))
 try:
     exec(Auth.decrypt("%s"))
 except Exception as ex:
