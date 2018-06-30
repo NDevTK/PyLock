@@ -8,6 +8,7 @@ if sys.version_info<(3,0,0):
     def input(string):
          return raw_input(string)
 import base64
+import binascii
 import os
 import getpass
 try:
@@ -15,17 +16,10 @@ try:
 except ImportError:
     exitmsg("cryptography not installed install it with pip install cryptography via cmd or powershell (On Windows)")
 from cryptography.hazmat.backends import default_backend
-from cryptography.hazmat.primitives import hashes
-from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
+from cryptography.hazmat.primitives.kdf.scrypt import Scrypt
 print("PyLock beta v1.0.2 by ***REMOVED*** https://github.com/NDevTK/Python-Script-Locker")
-salt = os.urandom(16).encode('hex')
-kdf = PBKDF2HMAC(
-    algorithm=hashes.SHA256(),
-    length=32,
-    salt=salt,
-    iterations=100000,
-    backend=default_backend()
-)
+salt = binascii.hexlify(os.urandom(40))
+kdf = Scrypt(salt=salt,length=32,n=2**14,r=8,p=1,backend=default_backend())
 loc = input("Script to use: ")
 try:
     fscript = open(loc)
@@ -52,21 +46,14 @@ try:
 except ImportError:
     exitmsg("cryptography not installed install it with pip install cryptography via cmd or powershell (On Windows)")
 from cryptography.hazmat.backends import default_backend
-from cryptography.hazmat.primitives import hashes
-from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
-kdf = PBKDF2HMAC(
-    algorithm=hashes.SHA256(),
-    length=32,
-    salt="%s",
-    iterations=100000,
-    backend=default_backend()
-)
+from cryptography.hazmat.primitives.kdf.scrypt import Scrypt
+kdf = Scrypt(salt=%s,length=32,n=2**14,r=8,p=1,backend=default_backend())
 try:
-    exec(Fernet(base64.urlsafe_b64encode(kdf.derive(getpass.getpass("Password: ")))).decrypt("%s"))
+    exec(Fernet(base64.urlsafe_b64encode(kdf.derive(getpass.getpass("Password to use: ").encode()))).decrypt(%s))
 except Exception as ex:
     if(type(ex).__name__ == "InvalidToken"):
         exitmsg("Wrong password (-:")
-    print(ex)''' % (salt, Fernet(base64.urlsafe_b64encode(kdf.derive(getpass.getpass("Password to use: ")))).encrypt(script))
+    print(ex)''' % (salt, Fernet(base64.urlsafe_b64encode(kdf.derive(getpass.getpass("Password to use: ").encode()))).encrypt(script.encode()))
 try:
     f = open(sloc,"w+")
     f.write(nc)
