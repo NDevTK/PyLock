@@ -14,7 +14,7 @@ import getpass
 try:
     from cryptography.fernet import Fernet
 except ImportError:
-    exitmsg("cryptography not installed install it with pip install cryptography via cmd or powershell (On Windows)")
+    exitmsg("The module cryptography is not installed please install it with pip install cryptography via the command line")
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives.kdf.scrypt import Scrypt
 print("PyLock beta v1.0.3 by ***REMOVED*** https://github.com/NDevTK/Python-Script-Locker")
@@ -44,7 +44,7 @@ import base64
 try:
     from cryptography.fernet import Fernet
 except ImportError:
-    exitmsg("cryptography not installed install it with pip install cryptography via cmd or powershell (On Windows)")
+    exitmsg("The module cryptography is not installed please install it with pip install cryptography via the command line")
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives.kdf.scrypt import Scrypt
 kdf = Scrypt(salt=%s,length=32,n=2**14,r=8,p=1,backend=default_backend())
