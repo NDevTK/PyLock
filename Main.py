@@ -17,7 +17,7 @@ except ImportError:
     exitmsg("The module cryptography is not installed please install it with pip install cryptography via the command line")
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives.kdf.scrypt import Scrypt
-print("PyLock beta v1.0.3 by ***REMOVED*** https://github.com/NDevTK/Python-Script-Locker")
+print("PyLock beta v1.0.3 by NDev https://github.com/NDevTK/Python-Script-Locker")
 kdf = Scrypt(salt=binascii.hexlify(os.urandom(40)),length=32,n=2**14,r=8,p=1,backend=default_backend())
 loc = input("Script to use: ")
 try:
@@ -29,7 +29,7 @@ fscript.close
 print("Can be used to overwrite your script")
 sloc = input("Save as: ")
 nc = '''#!/usr/bin/env python
-#Made using PyLock by ***REMOVED*** https://github.com/NDevTK/Python-Script-Locker
+#Made using PyLock by NDev https://github.com/NDevTK/Python-Script-Locker
 import sys
 def exitmsg(msg):
     print(msg)
