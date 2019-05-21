@@ -1,12 +1,23 @@
-#!/usr/bin/env python
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
 import sys
+
+# Function called on exit
 def exitmsg(msg):
     print(msg)
-    input("Press ENTER to exit the script")
+    input_pylock('Press ENTER to exit the script')
     sys.exit()
-if sys.version_info<(3,0,0):
-    def input(string):
-         return raw_input(string)
+
+# Create function for User Input
+if sys.version_info < (3, 0, 0):
+    def input_pylock(string):
+        return raw_input(string)
+else:
+    def input_pylock(string):
+        return input(string);
+
+#Inports :D
 import base64
 import binascii
 import os
@@ -14,49 +25,105 @@ import getpass
 try:
     from cryptography.fernet import Fernet
 except ImportError:
-    exitmsg("The module cryptography is not installed please install it with pip install cryptography via the command line")
+    exitmsg('The module cryptography is not installed please install it with pip.')
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives.kdf.scrypt import Scrypt
-print("PyLock beta v1.0.3 by NDev https://github.com/NDevTK/Python-Script-Locker")
-kdf = Scrypt(salt=binascii.hexlify(os.urandom(40)),length=32,n=2**14,r=8,p=1,backend=default_backend())
-loc = input("Script to use: ")
+
+# Header
+print('PyLock beta v1.0.4 by NDev https://github.com/NDevTK/Python-Script-Locker/')
+print('DO NOT TRUST THIS SCRIPT TO BE SECURE!')
+
+# Create salt
+salt=binascii.hexlify(os.urandom(40))
+
+# Scrypt Key derivation function
+kdf = Scrypt(
+    salt=salt,
+    length=32,
+    n=2 ** 14,
+    r=8,
+    p=1,
+    backend=default_backend(),
+    )
+
+script_location = input_pylock('Script to use: ')
 try:
-    fscript = open(loc)
+    script_file = open(script_location)
 except IOError:
-    exitmsg("Unable to read file")
-script = fscript.read()
-fscript.close
-print("Can be used to overwrite your script")
-sloc = input("Save as: ")
-nc = '''#!/usr/bin/env python
-#Made using PyLock by NDev https://github.com/NDevTK/Python-Script-Locker
+    exitmsg('Unable to read file')
+script = script_file.read()
+script_file.close
+
+# Get user input
+print('Can be used to overwrite your script')
+script_location = input_pylock('Save as: ')
+password = getpass.getpass('Password to use: ').encode()
+
+# Create key from password
+key = Fernet(base64.urlsafe_b64encode(kdf.derive(password)));
+del password; # Clean up
+
+# New file template
+new_file_contents = \
+    '''#!/usr/bin/env python
+print('PyLock beta v1.0.4 by NDev https://github.com/NDevTK/Python-Script-Locker/')
+print('DO NOT TRUST THIS SCRIPT TO BE SECURE!')
+
 import sys
+
 def exitmsg(msg):
     print(msg)
-    input("Press ENTER to exit")
+    input_pylock("Press ENTER to exit")
     sys.exit()
-if sys.version_info<(3,0,0):
-    def input(string):
-         return raw_input(string)
+
+# Create function for User Input
+if sys.version_info < (3, 0, 0):
+    def input_pylock(string):
+        return raw_input(string)
+else:
+    def input_pylock(string):
+        return input(string);
+
+#Inports
 import getpass
 import base64
 try:
     from cryptography.fernet import Fernet
 except ImportError:
-    exitmsg("The module cryptography is not installed please install it with pip install cryptography via the command line")
+    exitmsg("The module cryptography is not installed please install it with pip.")
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives.kdf.scrypt import Scrypt
+
+# Get user input
+password = getpass.getpass('Password: ').encode()
+
+# Scrypt Key derivation function
 kdf = Scrypt(salt=%s,length=32,n=2**14,r=8,p=1,backend=default_backend())
+
+# Create key from password
+key = Fernet(base64.urlsafe_b64encode(kdf.derive(password)));
+del password; # Clean up
+
+# Try to decrypt
 try:
-    exec(Fernet(base64.urlsafe_b64encode(kdf.derive(getpass.getpass("Password to use: ").encode()))).decrypt(%s))
+    script = key.decrypt(decrypt(%s)
 except Exception as ex:
     if(type(ex).__name__ == "InvalidToken"):
-        exitmsg("Wrong password (-:")
-    print(ex)''' % (salt, Fernet(base64.urlsafe_b64encode(kdf.derive(getpass.getpass("Password to use: ").encode()))).encrypt(script.encode()))
+        exitmsg("Wrong password (-:") # :(
+    print(ex)
+
+# Exec code
+del key # Clean up
+exec(script); # Run script
+del script # Clean up''' \
+% (salt, key.encrypt(script.encode())) # Use template
+
 try:
-    f = open(sloc,"w+")
-    f.write(nc)
+    new_file = open(script_location, 'w+')
+    new_file.write(new_file_contents) # Write file contents
 except IOError:
-    exitmsg("Unable to write to file")
-f.close
-exitmsg("Your file has been created")
+    exitmsg('Unable to write to file')
+
+del key; # Clean up
+new_file.close
+exitmsg('Your file has been created') # DONE :D
