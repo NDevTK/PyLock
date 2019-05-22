@@ -30,8 +30,9 @@ from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives.kdf.scrypt import Scrypt
 
 # Header
-print('PyLock beta v1.0.4 by NDev https://github.com/NDevTK/Python-Script-Locker/')
-print('DO NOT TRUST THIS SCRIPT TO BE SECURE!')
+header = """PyLock beta v1.0.4 by NDev https://github.com/NDevTK/Python-Script-Locker/
+DO NOT TRUST THIS SCRIPT TO BE SECURE!"""
+print(header)
 
 # Create salt
 salt=binascii.hexlify(os.urandom(40))
@@ -65,9 +66,10 @@ del password; # Clean up
 
 # New file template
 new_file_contents = \
-    '''#!/usr/bin/env python
-print('PyLock beta v1.0.4 by NDev https://github.com/NDevTK/Python-Script-Locker/')
-print('DO NOT TRUST THIS SCRIPT TO BE SECURE!')
+'''#!/usr/bin/env python
+
+# Header
+print("""%s""")
 
 import sys
 
@@ -106,7 +108,7 @@ del password; # Clean up
 
 # Try to decrypt
 try:
-    script = key.decrypt(decrypt(%s)
+    script = key.decrypt(%s)
 except Exception as ex:
     if(type(ex).__name__ == "InvalidToken"):
         exitmsg("Wrong password (-:") # :(
@@ -116,7 +118,7 @@ except Exception as ex:
 del key # Clean up
 exec(script); # Run script
 del script # Clean up''' \
-% (salt, key.encrypt(script.encode())) # Use template
+% (header, salt, key.encrypt(script.encode())) # Use template
 
 try:
     new_file = open(script_location, 'w+')
