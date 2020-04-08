@@ -30,7 +30,7 @@ from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives.kdf.scrypt import Scrypt
 
 # Header
-header = """PyLock beta v1.0.4 by NDev https://github.com/NDevTK/Python-Script-Locker/
+header = """PyLock beta v1.0.4 by NVDev https://github.com/NDevTK/Python-Script-Locker/
 DO NOT TRUST THIS SCRIPT TO BE SECURE!"""
 print(header)
 
