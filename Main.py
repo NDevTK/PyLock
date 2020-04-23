@@ -86,7 +86,7 @@ else:
     def input_pylock(string):
         return input(string);
 
-#Inports
+#Imports
 import getpass
 import base64
 try:
