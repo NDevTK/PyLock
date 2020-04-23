@@ -18,9 +18,9 @@ If applicable, add screenshots to help explain your problem.
 
 Desktop (please complete the following information):
 
-OS: [e.g. windows, osx, linux]
-cryptography module version
-Python Version [e.g. 3 or 2]
+OS: [e.g. windows, osx, linux]  
+cryptography module version  
+Python Version [e.g. 3 or 2]  
 
 **Additional context**
 Add any other context about the problem here.
