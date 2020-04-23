@@ -17,7 +17,7 @@ else:
     def input_pylock(string):
         return input(string);
 
-#Inports :D
+#Imports :D
 import base64
 import binascii
 import os
