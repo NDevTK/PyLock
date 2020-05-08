@@ -1,4 +1,4 @@
-# Python-Script-Locker
+# PyLock
 PyLock is not maintained (often)
 
 An easy way to password protect your python scripts by using encryption
